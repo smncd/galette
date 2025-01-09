@@ -39,7 +39,9 @@ class Page(HTTPEndpoint):
         page_path = PAGES_DIR / page
 
         if not page_path.is_file():
-            return 
+            raise HTTPException(
+                status_code=404
+            ) 
 
         page_file = open(page_path, 'r')
 
