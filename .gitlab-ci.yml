@@ -1,0 +1,11 @@
+stages:
+  - build-image
+
+build-image:
+  stage: build-image
+  before_script:
+    - echo "$CI_JOB_TOKEN" | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin
+  script:
+    - docker build -t $CI_REGISTRY/smncd/galette/galette .
+    - docker push $CI_REGISTRY/smncd/galette/galette
+
