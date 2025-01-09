@@ -34,7 +34,7 @@ class Page(HTTPEndpoint):
         if page == "":
             page = 'index'
 
-        page = page.replace('/index.html', '').removesuffix('.html').removesuffix('.md') + '.md'
+        page = page.replace('/index.html', '').removesuffix('.html').removesuffix('.md').strip('/') + '.md'
 
         page_path = PAGES_DIR / page
 
