@@ -1,4 +1,5 @@
-# ![Galette](./docs/banner.jpg)
+![Galette](./docs/banner.jpg)
+=============================
 
 Galette is a Markdown-to-HTML server, built with Starlette and Unvicorn.
 
