@@ -1,5 +1,6 @@
 services:
   galette:
+    image: registry.gitlab.com/smncd/galette/galette
     build: .
     ports:
       - 5000:5000
