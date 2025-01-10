@@ -6,5 +6,6 @@ example/
 pages/
 .gitattributes
 .gitignore
-build-image.sh
 compose.yaml
+publish-image.sh
+README.md
