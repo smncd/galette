@@ -11,10 +11,11 @@ from bs4 import BeautifulSoup
 from markupsafe import Markup
 
 
-
 DEBUG = getenv('DEBUG', False) in ('true', '1')
 
 PAGES_DIR = Path('/pages')
+
+ASSETS_DIR = Path('/assets')
 
 
 templates = Jinja2Templates(directory='templates')
@@ -77,7 +78,7 @@ class Page(HTTPEndpoint):
 
 routes = [
     Mount('/static', StaticFiles(directory='static'), name='static'),
-    Mount('/assets', StaticFiles(directory='/assets'), name='assets'),
+    Mount('/assets', StaticFiles(directory=ASSETS_DIR), name='assets'),
     Route('/{page:path}', Page, name='page'),
 ]
 
