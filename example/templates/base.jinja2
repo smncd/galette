@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% if title %}<title>{{ title }}</title>{% endif %}
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="bg-black text-white min-h-screen flex flex-col">
+    <header class="bg-gray-900 text-white py-8 shadow-lg">
+        <hgroup class="container mx-auto px-6 text-center">
+            {% if title %}<h1 class="text-4xl font-extrabold tracking-tight">{{ title }}</h1>{% endif %}
+            {% if subtitle %}<p class="mt-2 text-lg text-gray-400">{{ subtitle }}</p>{% endif %}
+        </hgroup>
+    </header>
+    <main class="container mx-auto px-6 py-12 flex-grow">
+        {% block main %}
+            
+        {% endblock main %}
+    </main>
+    <footer class="bg-gray-900 text-white py-6 mt-12">
+        <div class="container mx-auto px-6 text-center">
+            <p class="text-sm text-gray-400">
+                Made with <a href="https://gitlab.com/smncd/galette" class="text-blue-400 hover:underline">Galette</a> by <a href="https://smn.codes" class="text-blue-400 hover:underline">smn.codes</a>
+            </p>
+        </div>
+    </footer>
+</body>
+</html>
