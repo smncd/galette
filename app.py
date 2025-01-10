@@ -13,12 +13,17 @@ from markupsafe import Markup
 
 DEBUG = getenv('DEBUG', False) in ('true', '1')
 
-PAGES_DIR = Path('/pages')
+PAGES_DIR = Path(getenv('PAGES_DIR', '/pages'))
+ASSETS_DIR = Path(getenv('ASSETS_DIR', '/assets'))
+TEMPLATES_DIR = Path(getenv('TEMPLATES_DIR', 'templates'))
+STATIC_DIR = Path(getenv('STATIC_DIR', 'static'))
 
-ASSETS_DIR = Path('/assets')
+for path in (PAGES_DIR, ASSETS_DIR, TEMPLATES_DIR, STATIC_DIR):
+    if not path.exists() or not path.is_dir():
+        raise ValueError(f"{path} is not a folder, exiting...")
 
 
-templates = Jinja2Templates(directory='templates')
+templates = Jinja2Templates(directory=TEMPLATES_DIR)
 
 
 def not_found(request, exc: HTTPException):
@@ -77,7 +82,7 @@ class Page(HTTPEndpoint):
     
 
 routes = [
-    Mount('/static', StaticFiles(directory='static'), name='static'),
+    Mount('/static', StaticFiles(directory=STATIC_DIR), name='static'),
     Mount('/assets', StaticFiles(directory=ASSETS_DIR), name='assets'),
     Route('/{page:path}', Page, name='page'),
 ]
