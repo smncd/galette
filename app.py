@@ -32,7 +32,7 @@ def get_file_content(file: str) -> dict[str, dict|str|None]:
 
     frontmatter_result = frontmatter_regex.search(file)
 
-    frontmatter: dict[str, Any]|None
+    frontmatter = []
     content = re.sub(r'^\A---\n([\s\S]*?)\n---\n', '', file)
 
     if frontmatter_result:
@@ -42,7 +42,7 @@ def get_file_content(file: str) -> dict[str, dict|str|None]:
                 Loader=yaml.FullLoader
             )
         except:
-            frontmatter = None
+            pass
     
     return {
         'frontmatter': frontmatter,
