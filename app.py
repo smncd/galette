@@ -1,3 +1,6 @@
+from typing import Any
+import re
+import yaml
 from os import getenv
 from pathlib import Path
 from starlette.templating import Jinja2Templates
@@ -22,6 +25,34 @@ STATIC_DIR = Path(getenv('STATIC_DIR', 'static'))
 for path in (PAGES_DIR, ASSETS_DIR, TEMPLATES_DIR, STATIC_DIR):
     if not path.exists() or not path.is_dir():
         raise ValueError(f"{path} is not a folder, exiting...")
+
+
+def get_file_content(file: str) -> dict[str, dict|str|None]:
+    frontmatter_regex = re.compile(r'^\A(?:---|\+\+\+)(.*?)(?:---|\+\+\+)\n', re.S | re.M)
+
+    frontmatter_result = frontmatter_regex.search(file)
+
+    frontmatter: dict[str, Any]|None = None
+    content = file
+
+    if frontmatter_result:
+        try:
+            frontmatter = yaml.load(
+                stream=frontmatter_result.group(1),
+                Loader=yaml.FullLoader
+            )
+
+            content = re.sub(r'^\A---\n([\s\S]*?)\n---\n', '', file)
+        except:
+            raise HTTPException(
+                status_code=500
+            )
+    
+
+    return {
+        'frontmatter': frontmatter,
+        'content': content
+    }
 
 
 templates = Jinja2Templates(directory=TEMPLATES_DIR)
@@ -53,10 +84,12 @@ class Page(HTTPEndpoint):
                 status_code=404
             ) 
 
-        page_file = open(page_path, 'r')
+        page_file = open(page_path, 'r').read()
+
+        page_data = get_file_content(file=page_file)
 
         html = markdown(
-            text=page_file.read(), 
+            text=page_data['content'],
             extensions=[
                 'attr_list',
                 'def_list',
@@ -75,13 +108,21 @@ class Page(HTTPEndpoint):
 
         html = Markup(soup.prettify())
 
+        context = {
+            'html': html,
+            'page_path': page_path
+        }
+
+        frontmatter = page_data['frontmatter']
+
+        if frontmatter:
+            for key, value in frontmatter.items():
+                context[key] = value
+
         return templates.TemplateResponse(
             request=request, 
             name='page.jinja2',
-            context={
-                'html': html,
-                'page_path': page_path
-            }
+            context=context
         )
     
 
