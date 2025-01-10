@@ -51,11 +51,14 @@ services:
     image: registry.gitlab.com/smncd/galette
     ports:
       - 5000:5000
+    environment:
+        TEMPLATES_DIR: /templates # <--- custom template folder location
+        STATIC_DIR: /static # <--- custom static folder location
     volumes:
       - /path/to/your/pages/:/pages
       - /path/to/your/assets/:/assets
       - /path/to/your/templates/:/templates # <--- templates folder
-      - /path/to/your/static/:static # <--- static folder
+      - /path/to/your/static/:/static # <--- static folder
 ```
 
 The static folder can be used however you want/need, but the templates folder needs at least two files for Galette to be happy:
