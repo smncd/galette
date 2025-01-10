@@ -5,6 +5,7 @@ from starlette.endpoints import HTTPEndpoint
 from starlette.exceptions import HTTPException
 from starlette.applications import Starlette
 from starlette.routing import Route, Mount
+from starlette.responses import RedirectResponse
 from starlette.staticfiles import StaticFiles
 from markdown import markdown
 from bs4 import BeautifulSoup
@@ -40,7 +41,10 @@ class Page(HTTPEndpoint):
         if page == "":
             page = 'index'
 
-        page = page.replace('/index.html', '').removesuffix('.html').removesuffix('.md').strip('/') + '.md'
+        if page.endswith(('/index.html', '.html', '.md')):
+            return RedirectResponse(url=f"/{page.removesuffix('/index.html').removesuffix('.html').removesuffix('.md')}")
+
+        page = page.strip('/') + '.md'
 
         page_path = PAGES_DIR / page
 
