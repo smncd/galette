@@ -32,8 +32,8 @@ def get_file_content(file: str) -> dict[str, dict|str|None]:
 
     frontmatter_result = frontmatter_regex.search(file)
 
-    frontmatter: dict[str, Any]|None = None
-    content = file
+    frontmatter: dict[str, Any]|None
+    content = re.sub(r'^\A---\n([\s\S]*?)\n---\n', '', file)
 
     if frontmatter_result:
         try:
@@ -41,14 +41,9 @@ def get_file_content(file: str) -> dict[str, dict|str|None]:
                 stream=frontmatter_result.group(1),
                 Loader=yaml.FullLoader
             )
-
-            content = re.sub(r'^\A---\n([\s\S]*?)\n---\n', '', file)
         except:
-            raise HTTPException(
-                status_code=500
-            )
+            frontmatter = None
     
-
     return {
         'frontmatter': frontmatter,
         'content': content
