@@ -51,9 +51,6 @@ services:
     image: registry.gitlab.com/smncd/galette
     ports:
       - 5000:5000
-    environment:
-        TEMPLATES_DIR: /templates # <--- custom template folder location
-        STATIC_DIR: /static # <--- custom static folder location
     volumes:
       - /path/to/your/pages/:/pages
       - /path/to/your/assets/:/assets
@@ -115,6 +112,8 @@ You'd end up with the following rendered page:
 ```
 
 Static files have the base `/static`, so `/path/to/your/static/main.css` would end up being `http://localhost:5000/static/main.css`.
+
+A complete example is available [here](./example/)
 
 License and Ownership
 ---------------------

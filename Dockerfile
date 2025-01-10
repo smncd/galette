@@ -7,7 +7,18 @@ WORKDIR /app
 COPY requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . /app/
+RUN adduser -D galette
+USER galette
+
+ENV PATH="/usr/local/bin:${PATH}"
+
+COPY app.py LICENSE /app/
+
+COPY ./templates/ /templates/
+
+COPY ./static/ /static/
+
+VOLUME ["/pages", "/assets", "/templates", "/static"]
 
 EXPOSE 5000
 
