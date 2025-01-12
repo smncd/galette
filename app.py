@@ -9,9 +9,8 @@ from starlette.endpoints import HTTPEndpoint
 from starlette.exceptions import HTTPException
 from starlette.applications import Starlette
 from starlette.routing import Route, Mount
-from starlette.responses import RedirectResponse
+from starlette.responses import HTMLResponse, RedirectResponse
 from starlette.staticfiles import StaticFiles
-from starlette.responses import HTMLResponse
 from starlette.requests import Request
 from markdown import markdown
 from bs4 import BeautifulSoup
