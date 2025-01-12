@@ -108,10 +108,7 @@ class Page(HTTPEndpoint):
         
         page_cache = cache.get(id=page_id)
 
-        unmodified_since_cached = page_cache['timestamp'] >= page_file_mtime
-        within_ttl = page_file_mtime - page_cache['timestamp'] < page_cache['ttl']
-
-        if page_cache and unmodified_since_cached and within_ttl:
+        if page_cache and page_cache['timestamp'] >= page_file_mtime and page_cache['timestamp'] < page_cache['ttl']:
             body = page_cache['body']
         else:
             context = {}
