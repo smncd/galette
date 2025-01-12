@@ -1,6 +1,7 @@
-from typing import Any
 import re
 import yaml
+from typing import Any, TypedDict
+from time import time
 from os import getenv
 from pathlib import Path
 from starlette.templating import Jinja2Templates
@@ -10,6 +11,8 @@ from starlette.applications import Starlette
 from starlette.routing import Route, Mount
 from starlette.responses import RedirectResponse
 from starlette.staticfiles import StaticFiles
+from starlette.responses import HTMLResponse
+from starlette.requests import Request
 from markdown import markdown
 from bs4 import BeautifulSoup
 from markupsafe import Markup
@@ -25,6 +28,21 @@ STATIC_DIR = Path(getenv('STATIC_DIR', '/static'))
 for path in (PAGES_DIR, ASSETS_DIR, TEMPLATES_DIR, STATIC_DIR):
     if not path.exists() or not path.is_dir():
         raise ValueError(f"{path} is not a folder, exiting...")
+
+
+class PageCacheItem(TypedDict):
+    ttl: int
+    timestamp: float
+    body: str
+
+class PageCache:
+    _store: dict[str, PageCacheItem] = {}
+
+    def set(self, id: str, **item: PageCacheItem):
+        self._store[id] = item
+        
+    def get(self, id: str) -> PageCacheItem|None:
+        return self._store[id] if id in self._store else None
 
 
 def get_file_content(file: str) -> dict[str, dict|str|None]:
@@ -52,8 +70,10 @@ def get_file_content(file: str) -> dict[str, dict|str|None]:
 
 templates = Jinja2Templates(directory=TEMPLATES_DIR)
 
+cache = PageCache()
 
-def not_found(request, exc: HTTPException):
+
+def not_found(request: Request, exc: HTTPException):
     return templates.TemplateResponse(
         request=request,
         name='404.jinja2',
@@ -61,7 +81,7 @@ def not_found(request, exc: HTTPException):
     )
 
 class Page(HTTPEndpoint):
-    async def get(self, request):
+    async def get(self, request: Request) -> HTMLResponse:       
         page = request.path_params['page']
 
         if page == "":
@@ -78,46 +98,63 @@ class Page(HTTPEndpoint):
             raise HTTPException(
                 status_code=404
             ) 
+        
+        body: str
+        
+        page_id = page_path.as_uri()
+        page_file_mtime = page_path.stat().st_mtime
+        
+        page_cache = cache.get(id=page_id)
 
-        page_file = open(page_path, 'r').read()
+        unmodified_since_cached = page_cache['timestamp'] >= page_file_mtime
+        within_ttl = page_file_mtime - page_cache['timestamp'] < page_cache['ttl']
 
-        page_data = get_file_content(file=page_file)
+        if page_cache and unmodified_since_cached and within_ttl:
+            body = page_cache['body']
+        else:
+            context = {}
+        
+            page_file = open(page_path, 'r').read()
 
-        html = markdown(
-            text=page_data['content'],
-            extensions=[
-                'attr_list',
-                'def_list',
-                'fenced_code',
-                'footnotes',
-                'tables',
-                'toc',
-            ],
-        )
+            page_data = get_file_content(file=page_file)
 
-        soup = BeautifulSoup(html, "html.parser")
+            html = markdown(
+                text=page_data['content'],
+                extensions=[
+                    'attr_list',
+                    'def_list',
+                    'fenced_code',
+                    'footnotes',
+                    'tables',
+                    'toc',
+                ],
+            )
 
-        for anchor in soup.find_all('a', href=True):
-            if anchor['href'].endswith('.md'):
-                anchor['href'] = anchor['href'][:-3]
+            soup = BeautifulSoup(html, "html.parser")
 
-        html = Markup(soup.prettify())
+            for anchor in soup.find_all('a', href=True):
+                if anchor['href'].endswith('.md'):
+                    anchor['href'] = anchor['href'][:-3]
 
-        context = {
-            'html': html,
-            'page_path': page_path
-        }
+            context['html'] = Markup(soup.prettify())
+            context['page_path'] = page_path
 
-        frontmatter = page_data['frontmatter']
+            frontmatter = page_data['frontmatter']
 
-        if frontmatter:
-            for key, value in frontmatter.items():
-                context[key] = value
+            if frontmatter:
+                for key, value in frontmatter.items():
+                    context[key] = value
 
-        return templates.TemplateResponse(
-            request=request, 
-            name='page.jinja2',
-            context=context
+            body = templates.TemplateResponse(
+                request=request, 
+                name='page.jinja2',
+                context=context
+            ).body
+
+            cache.set(id=page_id, ttl=300, timestamp=page_file_mtime, body=body)
+
+        return HTMLResponse(
+            content=body
         )
     
 
