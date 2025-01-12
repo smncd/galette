@@ -88,7 +88,10 @@ class Page(HTTPEndpoint):
             page = 'index'
 
         if page.endswith(('/index.html', '.html', '.md')):
-            return RedirectResponse(url=f"/{page.removesuffix('/index.html').removesuffix('.html').removesuffix('.md')}")
+            return RedirectResponse(
+                url=f"/{page.removesuffix('/index.html').removesuffix('.html').removesuffix('.md')}",
+                status_code=308,
+            )
 
         page = page.strip('/') + '.md'
 
