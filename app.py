@@ -1,7 +1,7 @@
 import re
 import yaml
-from typing import Any, TypedDict
-from time import time
+from img2webp import convert_image
+from typing import TypedDict
 from os import getenv
 from pathlib import Path
 from starlette.templating import Jinja2Templates
@@ -101,6 +101,7 @@ class Page(HTTPEndpoint):
                 status_code=404
             ) 
         
+        headers = {}
         body: str
         
         page_id = page_path.as_uri()
@@ -110,6 +111,7 @@ class Page(HTTPEndpoint):
 
         if page_cache and page_cache['timestamp'] >= page_file_mtime and page_file_mtime - page_cache['timestamp'] < page_cache['ttl']:
             body = page_cache['body']
+            headers['Is-Cached'] = 'true'
         else:
             context = {}
         
@@ -135,6 +137,36 @@ class Page(HTTPEndpoint):
                 if anchor['href'].endswith('.md'):
                     anchor['href'] = anchor['href'][:-3]
 
+            for img in soup.find_all('img', src=True):
+                if img['src'].startswith('/assets'):
+                    path = Path(img['src'].removeprefix('/assets/'))
+                    
+                    asset_path: Path = ASSETS_DIR / path
+                    
+                    webp_path = ASSETS_DIR / '.webp' / path.with_suffix('.webp')
+                    webp_path.parent.mkdir(parents=True, exist_ok=True)
+
+                    webp_src = Path('/assets', '.webp', path).with_suffix('.webp')
+
+                    if not asset_path.is_file():
+                        continue
+
+                    convert_image(asset_path, webp_path, quality=80)
+
+                    picture_tag = soup.new_tag('picture')
+
+                    source_tag = soup.new_tag('source')
+                    source_tag.attrs['srcset'] = webp_src
+                    source_tag.attrs['type'] = 'image/webp'
+                    picture_tag.append(source_tag)
+
+                    img_tag = soup.new_tag('img')
+                    img_tag.attrs = img.attrs
+                    picture_tag.append(img_tag)
+
+                    img.replace_with(picture_tag)
+
+
             context['html'] = Markup(soup.prettify())
             context['page_path'] = page_path
 
@@ -153,7 +185,8 @@ class Page(HTTPEndpoint):
             cache.set(id=page_id, ttl=300, timestamp=page_file_mtime, body=body)
 
         return HTMLResponse(
-            content=body
+            content=body,
+            headers=headers
         )
     
 

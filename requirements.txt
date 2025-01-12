@@ -4,3 +4,4 @@ Jinja2==3.1.5
 Markdown==3.7.0
 beautifulsoup4==4.12.3
 PyYAML==6.0.2
+img2webp==0.1.1
