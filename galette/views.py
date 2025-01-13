@@ -14,7 +14,7 @@ from galette.settings import PAGES_DIR, ASSETS_DIR
 from galette.templates import render, html_ext_list
 
 
-cache = PageCache()
+cache = PageCache(maxsize=512)
 
 
 def not_found(request: Request, exc: HTTPException) -> HTMLResponse:
