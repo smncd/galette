@@ -11,18 +11,20 @@ from markupsafe import Markup
 from galette.cache import PageCache
 from galette.files import get_file_content
 from galette.settings import PAGES_DIR, ASSETS_DIR
-from galette.templates import templates
+from galette.templates import render, html_ext_list
 
 
 cache = PageCache()
 
 
-def not_found(request: Request, exc: HTTPException):
-    return templates.TemplateResponse(
+def not_found(request: Request, exc: HTTPException) -> HTMLResponse:
+    response, _ = render(
         request=request,
-        name='404.jinja2',
+        name=html_ext_list('404'),
         status_code=404,
     )
+
+    return response
 
 
 class Page(HTTPEndpoint):
@@ -122,11 +124,11 @@ class Page(HTTPEndpoint):
                 for key, value in frontmatter.items():
                     context[key] = value
 
-            body = templates.TemplateResponse(
+            _, body = render(
                 request=request, 
-                name='page.jinja2',
-                context=context
-            ).body
+                name=html_ext_list('page'),
+                context=context,
+            )
 
             cache.set(id=page_id, ttl=300, timestamp=page_file_mtime, body=body)
 
