@@ -10,11 +10,11 @@ class PageCache:
     _maxsize: int
     _store: dict[str, PageCacheItem] = {}
 
-    def __init__(self, maxsize: int = 512) -> None:
+    def __init__(self, maxsize: int = 0) -> None:
         self._maxsize = maxsize
 
     def set(self, id: str, **item: PageCacheItem) -> None:
-        if len(self._store) > self._maxsize:
+        if self._maxsize > 0 and len(self._store) > self._maxsize:
             oldest = min(self._store, key=lambda item: item['timestamp'])
             self.delete(oldest)
 
