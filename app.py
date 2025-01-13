@@ -45,12 +45,12 @@ class PageCache:
 
 
 def get_file_content(file: str) -> dict[str, dict|str|None]:
-    frontmatter_regex = re.compile(r'^\A(?:---|\+\+\+)(.*?)(?:---|\+\+\+)\n', re.S | re.M)
+    frontmatter_regex = re.compile(r'^\A(?:---|\+\+\+)(.*?)(?:---|\+\+\+)', re.S | re.M)
 
     frontmatter_result = frontmatter_regex.search(file)
 
     frontmatter = []
-    content = re.sub(r'^\A---\n([\s\S]*?)\n---\n', '', file)
+    content = re.sub(r'^\A---\n([\s\S]*?)\n---', '', file)
 
     if frontmatter_result:
         try:
