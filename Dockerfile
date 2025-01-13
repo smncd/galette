@@ -12,7 +12,7 @@ USER galette
 
 ENV PATH="/usr/local/bin:${PATH}"
 
-COPY app.py LICENSE /app/
+COPY ./galette LICENSE /app/
 
 COPY ./templates/ /templates/
 
@@ -22,4 +22,4 @@ VOLUME ["/pages", "/assets", "/templates", "/static"]
 
 EXPOSE 5000
 
-CMD [ "uvicorn", "app:app", "--host", "0.0.0.0", "--port", "5000" ]
+CMD [ "uvicorn", "galette.app:app", "--host", "0.0.0.0", "--port", "5000" ]

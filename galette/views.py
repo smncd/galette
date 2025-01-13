@@ -1,73 +1,18 @@
-import re
-import yaml
 from img2webp import convert_image
-from typing import TypedDict
-from os import getenv
 from pathlib import Path
-from starlette.templating import Jinja2Templates
 from starlette.endpoints import HTTPEndpoint
 from starlette.exceptions import HTTPException
-from starlette.applications import Starlette
-from starlette.routing import Route, Mount
 from starlette.responses import HTMLResponse, RedirectResponse
-from starlette.staticfiles import StaticFiles
 from starlette.requests import Request
 from markdown import markdown
 from bs4 import BeautifulSoup
 from markupsafe import Markup
 
+from galette.cache import PageCache
+from galette.files import get_file_content
+from galette.settings import PAGES_DIR, ASSETS_DIR
+from galette.templates import templates
 
-DEBUG = getenv('DEBUG', False) in ('true', '1')
-
-PAGES_DIR = Path(getenv('PAGES_DIR', '/pages'))
-ASSETS_DIR = Path(getenv('ASSETS_DIR', '/assets'))
-TEMPLATES_DIR = Path(getenv('TEMPLATES_DIR', '/templates'))
-STATIC_DIR = Path(getenv('STATIC_DIR', '/static'))
-
-for path in (PAGES_DIR, ASSETS_DIR, TEMPLATES_DIR, STATIC_DIR):
-    if not path.exists() or not path.is_dir():
-        raise ValueError(f"{path} is not a folder, exiting...")
-
-
-class PageCacheItem(TypedDict):
-    ttl: int
-    timestamp: float
-    body: str
-
-class PageCache:
-    _store: dict[str, PageCacheItem] = {}
-
-    def set(self, id: str, **item: PageCacheItem):
-        self._store[id] = item
-        
-    def get(self, id: str) -> PageCacheItem|None:
-        return self._store[id] if id in self._store else None
-
-
-def get_file_content(file: str) -> dict[str, dict|str|None]:
-    frontmatter_regex = re.compile(r'^\A(?:---|\+\+\+)(.*?)(?:---|\+\+\+)', re.S | re.M)
-
-    frontmatter_result = frontmatter_regex.search(file)
-
-    frontmatter = []
-    content = re.sub(r'^\A---\n([\s\S]*?)\n---', '', file)
-
-    if frontmatter_result:
-        try:
-            frontmatter = yaml.load(
-                stream=frontmatter_result.group(1),
-                Loader=yaml.FullLoader
-            )
-        except:
-            pass
-    
-    return {
-        'frontmatter': frontmatter,
-        'content': content
-    }
-
-
-templates = Jinja2Templates(directory=TEMPLATES_DIR)
 
 cache = PageCache()
 
@@ -78,6 +23,7 @@ def not_found(request: Request, exc: HTTPException):
         name='404.jinja2',
         status_code=404,
     )
+
 
 class Page(HTTPEndpoint):
     async def get(self, request: Request) -> HTMLResponse:       
@@ -189,15 +135,3 @@ class Page(HTTPEndpoint):
             headers=headers
         )
     
-
-routes = [
-    Mount('/static', StaticFiles(directory=STATIC_DIR), name='static'),
-    Mount('/assets', StaticFiles(directory=ASSETS_DIR), name='assets'),
-    Route('/{page:path}', Page, name='page'),
-]
-
-exception_handlers = {
-    404: not_found
-}
-
-app = Starlette(routes=routes, exception_handlers=exception_handlers, debug=DEBUG)
