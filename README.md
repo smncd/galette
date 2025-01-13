@@ -63,7 +63,17 @@ The static folder can be used however you want/need, but the templates folder ne
 * `page.jinja2`: Your page template. For now, different templates aren't really supported.
 * `404.jinja2`: The 404 page template.
 
-As you can tell by the file extension, Galette uses [Jinja2](https://jinja.palletsprojects.com/en/stable/templates/) for templates.
+### Tip!
+
+Templates can have several file extensions. Galette will look for them in the following order:
+
+1. `{name}.html.jinja2`
+2. `{name}.html.jinja`
+3. `{name}.jinja2`
+4. `{name}.jinja`
+5. `{name}.html`
+
+As you can tell by the file extensions, Galette uses [Jinja2](https://jinja.palletsprojects.com/en/stable/templates/) for templates.
 
 The frontmatter from your markdown files will be accessible in the templates, along with `html`, which is the body content. 
 
@@ -121,4 +131,4 @@ Copyright © 2025 Simon Lagerlöf [contact@smn.codes](mailto:contact@smn.codes)
 
 This project is licensed under the BSD-3-Clause license - see the [LICENSE](./LICENSE) file for details.
 
-Galette uses [VanillaHTML by Bijan Fandey](https://github.com/fandeytech/VanillaHTML), licensed under the MIT license.
+Galette's default templates uses [VanillaHTML by Bijan Fandey](https://github.com/fandeytech/VanillaHTML), licensed under the MIT license.
