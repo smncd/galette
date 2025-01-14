@@ -1,0 +1,1 @@
+from galette.app import app
