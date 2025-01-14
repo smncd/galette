@@ -1,7 +1,7 @@
 ![Galette](./docs/banner.jpg)
 =============================
 
-Galette is a Markdown-to-HTML server, built with Starlette and Unvicorn.
+Galette is a Markdown-to-HTML server, built with Starlette and Uvicorn.
 
 Why does Galette exist? Mostly for fun, and because I'll maybe need it at some point. Guess we'll find out.
 
