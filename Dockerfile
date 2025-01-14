@@ -12,7 +12,9 @@ USER galette
 
 ENV PATH="/usr/local/bin:${PATH}"
 
-COPY ./galette LICENSE /app/
+COPY LICENSE /app/
+
+COPY ./galette/ /app/galette/
 
 COPY ./templates/ /templates/
 
