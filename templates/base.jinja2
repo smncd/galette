@@ -4,15 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex">
-    <link rel="stylesheet" href="/static/css/reset.css" />
-    <link rel="stylesheet" href="/static/css/vanillaHTML.css" />
-    <style>
-        body {
-            margin: 0 auto;
-            padding: 3rem 0;
-            width: min(50rem, 100%);
-        }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/simpledotcss@2.3.3/simple.min.css" rel="stylesheet">  
+    <link href="{{ url_for('static', path='/style.css') }}" rel="stylesheet">  
 </head>
 <body>
 {% block body %}

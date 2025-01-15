@@ -41,7 +41,7 @@ Visit `http://localhost:5000` and you will see your markdown, rendered as HTML.
 Templates and static files
 --------------------------
 
-Galette ships with some default templates, using [VanillaHtml](https://github.com/fandeytech/VanillaHTML), but you will probably want to customize it even further.
+Galette ships with some default templates, using [Simple.CSS](https://github.com/kevquirk/simple.css), but you will probably want to customize it even further.
 
 To use custom templates and/or static files, edit your `compose.yaml` from above:
 
@@ -131,4 +131,4 @@ Copyright © 2025 Simon Lagerlöf [contact@smn.codes](mailto:contact@smn.codes)
 
 This project is licensed under the BSD-3-Clause license - see the [LICENSE](./LICENSE) file for details.
 
-Galette's default templates uses [VanillaHTML by Bijan Fandey](https://github.com/fandeytech/VanillaHTML), licensed under the MIT license.
+Galette's default templates uses [Simple.CSS](https://github.com/kevquirk/simple.css), licensed under the MIT license.

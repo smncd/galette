@@ -12,15 +12,7 @@ USER galette
 
 ENV PATH="/usr/local/bin:${PATH}"
 
-COPY LICENSE /app/
-
-COPY ./galette/ /app/galette/
-
-COPY ./templates/ /templates/
-
-COPY ./static/ /static/
-
-VOLUME ["/pages", "/assets", "/templates", "/static"]
+COPY . /app/galette/
 
 EXPOSE 5000
 
