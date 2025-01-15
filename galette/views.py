@@ -10,7 +10,7 @@ from markupsafe import Markup
 
 from galette.cache import PageCache
 from galette.files import get_file_content
-from galette.settings import PAGES_DIR, ASSETS_DIR
+from galette.settings import PAGES_DIR, ASSETS_DIR, DEBUG
 from galette.templates import render, html_ext_list
 
 
@@ -57,7 +57,7 @@ class Page(HTTPEndpoint):
         
         page_cache = cache.get(id=page_id)
 
-        if page_cache and page_cache['timestamp'] >= page_file_mtime and page_file_mtime - page_cache['timestamp'] < page_cache['ttl']:
+        if not DEBUG and page_cache and page_cache['timestamp'] >= page_file_mtime and page_file_mtime - page_cache['timestamp'] < page_cache['ttl']:
             body = page_cache['body']
             headers['Is-Cached'] = 'true'
         else:
@@ -130,7 +130,8 @@ class Page(HTTPEndpoint):
                 context=context,
             )
 
-            cache.set(id=page_id, ttl=300, timestamp=page_file_mtime, body=body)
+            if not DEBUG:
+                cache.set(id=page_id, ttl=300, timestamp=page_file_mtime, body=body)
 
         return HTMLResponse(
             content=body,
