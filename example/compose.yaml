@@ -1,10 +1,12 @@
 services:
   galette-example:
     image: registry.gitlab.com/smncd/galette:latest
+    build: ..
     ports:
       - 5000:5000
     volumes:
       - ./pages/:/pages
       - ./assets/:/assets
+      - ./webp/:/webp
       - ./templates/:/templates
       - ./static/:/static

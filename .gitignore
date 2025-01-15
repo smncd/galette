@@ -1,4 +1,5 @@
 __pycache__/
 .venv/
+.webp/
 /pages/
 /assets/

@@ -1,3 +1,4 @@
+from uuid import uuid5, NAMESPACE_URL
 from img2webp import convert_image
 from pathlib import Path
 from starlette.endpoints import HTTPEndpoint
@@ -10,7 +11,7 @@ from markupsafe import Markup
 
 from galette.cache import PageCache
 from galette.files import get_file_content
-from galette.settings import PAGES_DIR, ASSETS_DIR, DEBUG
+from galette.settings import PAGES_DIR, ASSETS_DIR, WEBP_DIR, DEBUG
 from galette.templates import render, html_ext_list
 
 
@@ -90,16 +91,29 @@ class Page(HTTPEndpoint):
                     path = Path(img['src'].removeprefix('/assets/'))
                     
                     asset_path: Path = ASSETS_DIR / path
-                    
-                    webp_path = ASSETS_DIR / '.webp' / path.with_suffix('.webp')
-                    webp_path.parent.mkdir(parents=True, exist_ok=True)
-
-                    webp_src = Path('/assets', '.webp', path).with_suffix('.webp')
 
                     if not asset_path.is_file():
                         continue
 
-                    convert_image(asset_path, webp_path, quality=80)
+                    asset_name = asset_path.name
+                    asset_timestamp = asset_path.stat().st_mtime
+
+                    asset_name_hash = asset_name
+                    asset_time_hash = str(uuid5(namespace=NAMESPACE_URL, name=str(asset_timestamp)))
+
+                    webp_name = f'{asset_time_hash}.webp'
+                    
+                    webp_path = WEBP_DIR / path.with_name(asset_name_hash) / webp_name
+                    webp_path.parent.mkdir(parents=True, exist_ok=True)
+
+                    webp_src = request.url_for('webp_assets', path=str(path.with_name(asset_name_hash) / webp_name))
+
+                    if not webp_path.is_file():
+                        for path in webp_path.parent.rglob('**/*'):
+                            if path.is_file():
+                                path.unlink()
+            
+                        convert_image(asset_path, webp_path, quality=80)
 
                     picture_tag = soup.new_tag('picture')
 
@@ -110,6 +124,7 @@ class Page(HTTPEndpoint):
 
                     img_tag = soup.new_tag('img')
                     img_tag.attrs = img.attrs
+                    img_tag.attrs['src'] = request.url_for('assets', path=img.attrs['src'])
                     picture_tag.append(img_tag)
 
                     img.replace_with(picture_tag)
