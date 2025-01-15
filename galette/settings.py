@@ -1,14 +1,17 @@
 from os import getenv
-from pathlib import Path
-
+from galette.utils import set_path
 
 DEBUG = getenv('DEBUG', False) in ('true', '1')
 
-PAGES_DIR = Path(getenv('PAGES_DIR', '/pages'))
-ASSETS_DIR = Path(getenv('ASSETS_DIR', '/assets'))
-TEMPLATES_DIR = Path(getenv('TEMPLATES_DIR', '/templates'))
-STATIC_DIR = Path(getenv('STATIC_DIR', '/static'))
+PAGES_DIR = set_path(getenv('PAGES_DIR', '/pages'))
+ASSETS_DIR = set_path(getenv('ASSETS_DIR', '/assets'))
 
-for path in (PAGES_DIR, ASSETS_DIR, TEMPLATES_DIR, STATIC_DIR):
-    if not path.exists() or not path.is_dir():
-        raise ValueError(f"{path} is not a folder, exiting...")
+STATIC_DIR = set_path(
+    path=getenv('STATIC_DIR', '/static'),
+    fallback='static',
+)
+    
+TEMPLATES_DIR = set_path(
+    path=getenv('TEMPLATES_DIR', '/templates'),
+    fallback='templates'
+)
