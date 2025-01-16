@@ -64,9 +64,7 @@ class Page(HTTPEndpoint):
         else:
             context = {}
         
-            page_file = open(page_path, 'r').read()
-
-            page_data = get_file_content(file=page_file)
+            page_data = get_file_content(file=page_path)
 
             html = markdown(
                 text=page_data['content'],

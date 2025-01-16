@@ -1,20 +1,22 @@
 import re
 import yaml
-from pathlib import PosixPath
+from pathlib import Path
 
 from galette.settings import PAGES_DIR
 
-def get_all_page_files() -> list[PosixPath]:
+def get_all_page_files() -> list[Path]:
     return list(PAGES_DIR.rglob('*.md'))
 
 
-def get_file_content(file: str) -> dict[str, dict|str|None]:
+def get_file_content(file: Path) -> dict[str, dict|str|None]:
+    data = open(file, 'r').read()
+
     frontmatter_regex = re.compile(r'^\A(?:---|\+\+\+)(.*?)(?:---|\+\+\+)', re.S | re.M)
 
-    frontmatter_result = frontmatter_regex.search(file)
+    frontmatter_result = frontmatter_regex.search(data)
 
     frontmatter = []
-    content = re.sub(r'^\A---\n([\s\S]*?)\n---', '', file)
+    content = re.sub(r'^\A---\n([\s\S]*?)\n---', '', data)
 
     if frontmatter_result:
         try:
