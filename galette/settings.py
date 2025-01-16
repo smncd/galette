@@ -20,3 +20,9 @@ TEMPLATES_DIR = set_path(
     path=getenv('TEMPLATES_DIR', '/templates'),
     fallback='templates'
 )
+
+BUILD_DIR = set_path(
+    path=getenv('BUILD_DIR', '/build'),
+    fallback='.build',
+    create_fallback=True
+)
