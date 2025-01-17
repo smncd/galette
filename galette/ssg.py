@@ -42,7 +42,6 @@ if __name__ == '__main__':
             file.write(body)
             file.close()
             print(file)
-
-    copytree(STATIC_DIR, BUILD_DIR / STATIC_DIR.name, dirs_exist_ok=True)
-    copytree(ASSETS_DIR, BUILD_DIR / ASSETS_DIR.name, dirs_exist_ok=True)
-    copytree(WEBP_DIR, BUILD_DIR / WEBP_DIR.name, dirs_exist_ok=True)
+    
+    for dir in (STATIC_DIR, ASSETS_DIR, WEBP_DIR):
+        copytree(dir, BUILD_DIR / dir.name, dirs_exist_ok=True)
