@@ -11,6 +11,7 @@ WEBP_DIR = set_path(
     fallback='.webp',
     create_fallback=True
 )
+
 STATIC_DIR = set_path(
     path=getenv('STATIC_DIR', '/static'),
     fallback='static',
