@@ -2,7 +2,7 @@ from shutil import copytree
 from jinja2 import Template
 from starlette.requests import Request
 from starlette.routing import Router
-from galette.settings import BUILD_DIR, ASSETS_DIR, STATIC_DIR, WEBP_DIR
+from galette.settings import BUILD_DIR, ASSETS_DIR, STATIC_DIR, WEBP_DIR, PAGES_DIR
 from galette.templates import templates
 from galette.app import routes
 from galette.files import get_all_page_files, get_file_content
@@ -32,9 +32,7 @@ if __name__ == '__main__':
 
         body = template.render(context)
 
-        page_path_name = page_path.with_suffix('').name
-
-        out_path = BUILD_DIR / (page_path_name if page_path_name != 'index' else '') / 'index.html' 
+        out_path = BUILD_DIR / page_path.relative_to(PAGES_DIR).with_suffix('' if page_path.name != 'index.md' else '.html') / ('index.html' if page_path.name != 'index.md' else '')
 
         out_path.parent.mkdir(exist_ok=True, parents=True)
 
