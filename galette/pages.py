@@ -67,7 +67,7 @@ def page_context(request: Request|dict, page_data: dict[str, dict|str]) -> dict:
 
             img_tag = soup.new_tag('img')
             img_tag.attrs = img.attrs
-            img_tag.attrs['src'] = request.url_for('assets', path=img.attrs['src'])
+            img_tag.attrs['src'] = request.url_for('assets', path=str(path))
             picture_tag.append(img_tag)
 
             img.replace_with(picture_tag)
