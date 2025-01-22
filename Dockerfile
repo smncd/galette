@@ -34,4 +34,4 @@ VOLUME [ "/pages", "/assets" ]
 
 EXPOSE 5000
 
-CMD [ "python", "-m", "galette", "start", "--host", "0.0.0.0" ]
+CMD [ "python", "-m", "galette", "--host", "0.0.0.0" ]
