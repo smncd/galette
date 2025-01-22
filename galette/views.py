@@ -1,17 +1,12 @@
 from uuid import uuid5, NAMESPACE_URL
-from img2webp import convert_image
 from pathlib import Path
 from starlette.endpoints import HTTPEndpoint
 from starlette.exceptions import HTTPException
 from starlette.responses import HTMLResponse, RedirectResponse
 from starlette.requests import Request
-from markdown import markdown
-from bs4 import BeautifulSoup
-from markupsafe import Markup
-
 from galette.cache import PageCache
 from galette.files import get_file_content
-from galette.settings import PAGES_DIR, ASSETS_DIR, WEBP_DIR, DEBUG
+from galette.settings import PAGES_DIR, DEBUG
 from galette.templates import render, html_ext_list
 from galette.pages import page_context
 
