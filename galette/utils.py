@@ -20,3 +20,8 @@ def set_path(path: Path|str|None, fallback: Path|str|None = None, create_fallbac
         return fallback
     else:
         raise ValueError(f"{path} is not directory")
+    
+def dir_exists(input: str) -> bool:
+    path = Path(input)
+
+    return path.exists() and path.is_dir()
