@@ -1,7 +1,7 @@
----
-title: Flaky pastry
-subtitle: We love that stuff!
----
+Flaky Pastry
+============
+
+**We love that stuff**
 
 > Golden crust unfolds,  
 > Fruits or cheese within its heart,  
