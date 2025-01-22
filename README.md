@@ -123,7 +123,7 @@ You'd end up with the following rendered page:
 
 Static files have the base `/static`, so `/path/to/your/static/main.css` would end up being `http://localhost:5000/static/main.css`.
 
-A complete example is available [here](./docs/example/)
+Some examples are available [here](./docs/examples/)
 
 License and Ownership
 ---------------------
