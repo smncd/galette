@@ -11,7 +11,7 @@ from galette.pages import page_context
 from galette.utils import set_path
 
 
-if __name__ == '__main__':
+def export():
     BUILD_DIR = set_path(
         path=getenv('GALETTE_BUILD_DIR'),
         fallback='.build',

@@ -1,5 +1,8 @@
 __pycache__/
 .venv/
 .webp/
-/pages/
 /assets/
+/binary/build/
+/binary/dist/
+/pages/
+galette.spec
