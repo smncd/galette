@@ -1,3 +1,4 @@
+from os import environ
 from pathlib import Path
 from uuid import uuid5, NAMESPACE_URL
 
@@ -21,6 +22,9 @@ def set_path(path: Path|str|None, fallback: Path|str|None = None, create_fallbac
     else:
         raise ValueError(f"{path} is not directory")
     
+def setenv(key: str, value: str):
+    environ[key] = value
+
 def dir_exists(input: str) -> bool:
     path = Path(input)
 
