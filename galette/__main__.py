@@ -1,7 +1,8 @@
+from os import getenv
 from argparse import ArgumentParser
 from uvicorn import run as uvicorn
-from galette.app import app
-from galette.generator import export
+from galette.utils import dir_exists, setenv
+
 
 def main():
     parser = ArgumentParser(
@@ -9,36 +10,96 @@ def main():
         description="Markdown-to-HTML server, built with Starlette and Uvicorn",
     )
 
-    task = parser.add_subparsers(dest="task", required=True)
+    parser.add_argument(
+        '--debug',
+        action='store_true',
+        help='Run in debug mode'
+    )
 
-    task_start = task.add_parser("start", help="Start Galette server")
-
-    task_start.add_argument(
+    parser.add_argument(
         '--host', '-H',
         type=str,
         default='localhost',
         help='The host Galette should run on (default http://localhost)'
     )
 
-    task_start.add_argument(
+    parser.add_argument(
         '--port', '-P',
         type=int,
         default=5000,
         help='The port Galette should run on (default 5000)'
     )
 
-    task_export = task.add_parser("export", help="Generate static HTML.")
+    parser.add_argument(
+        '--export', '-e',
+        type=str,
+        nargs='?',
+        const=True,
+        default=False,
+        help='Export the site as static HTML, CSS and JS.'
+    )
+
+    parser.add_argument(
+        '--pages-dir', '-p',
+        type=str,
+        help='Path to the pages directory.'
+    )
+
+    parser.add_argument(
+        '--assets-dir', '-a',
+        type=str,
+        help='Path to the assets directory.'
+    )
+
+    parser.add_argument(
+        '--static-dir', '-s',
+        type=str,
+        help='Path to the static directory.'
+    )
+
+    parser.add_argument(
+        '--templates-dir', '-t',
+        type=str,
+        help='Path to the templates directory.'
+    )
+
 
     args = parser.parse_args()
 
-    if args.task == 'start':
+    if args.debug:
+        setenv('DEBUG', 'true')
+    
+    if isinstance(args.pages_dir, str):
+        assert dir_exists(args.pages_dir)
+        setenv('GALETTE_PAGES_DIR', args.pages_dir)
+    
+    if isinstance(args.assets_dir, str):
+        assert dir_exists(args.assets_dir)
+        setenv('GALETTE_ASSETS_DIR', args.assets_dir)
+    
+    if isinstance(args.static_dir, str):
+        assert dir_exists(args.static_dir)
+        setenv('GALETTE_STATIC_DIR', args.static_dir)
+    
+    if isinstance(args.templates_dir, str):
+        assert dir_exists(args.templates_dir)
+        setenv('GALETTE_TEMPLATES_DIR', args.templates_dir)
+    
+
+    if args.export:
+        from galette.generator import export
+
+        # TODO: The args.export directory is being ignored right now.
+        export()
+    else:
+        from galette.app import app
+
         uvicorn(
-            app=app,
+            app=app if not getenv('RELOAD') else 'galette.app:app',
             host=args.host,
             port=args.port,
+            reload=getenv('RELOAD')
         )
-    elif args.task == 'export':
-        export()
 
 
 if __name__ == '__main__':
