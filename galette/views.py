@@ -54,7 +54,7 @@ class Page(HTTPEndpoint):
         headers = {}
         body: str
         
-        page_id = page_path.as_uri()
+        page_id = str(uuid5(namespace=NAMESPACE_URL, name=str(page_path)))
         page_file_mtime = page_path.stat().st_mtime
         
         page_cache = cache.get(id=page_id)

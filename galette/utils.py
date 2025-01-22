@@ -1,12 +1,13 @@
 from pathlib import Path
 
-def set_path(path: Path|str, fallback: Path|str|None = None, create_fallback: bool = False) -> Path|None:
-    path = Path(path)
+def set_path(path: Path|str|None, fallback: Path|str|None = None, create_fallback: bool = False) -> Path:
+    if path:
+        path = Path(path)
 
     if fallback:
         fallback = Path(fallback)
 
-    if path.exists() and path.is_dir():
+    if path and path.exists() and path.is_dir():
         return path
     elif fallback and fallback.exists() and fallback.is_dir():
         return fallback
@@ -14,4 +15,4 @@ def set_path(path: Path|str, fallback: Path|str|None = None, create_fallback: bo
         fallback.mkdir()
         return fallback
     else:
-        return None
+        raise ValueError(f"{path} is not directory")

@@ -3,7 +3,14 @@ FROM python:3.13-alpine
 ENV PIP_DEFAULT_TIMEOUT=100 \
     PYTHONUNBUFFERED=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=1 \
-    PIP_NO_CACHE_DIR=1
+    PIP_NO_CACHE_DIR=1 \
+    GALETTE_PAGES_DIR='/pages' \
+    GALETTE_ASSETS_DIR='/assets' \
+    GALETTE_WEBP_DIR='/webp' \
+    GALETTE_STATIC_DIR='/static' \
+    GALETTE_TEMPLATES_DIR='/templates' \
+    GALETTE_BUILD_DIR='/build'
+
 
 RUN apk update \
     && apk upgrade --no-cache \

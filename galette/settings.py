@@ -3,27 +3,34 @@ from galette.utils import set_path
 
 DEBUG = getenv('DEBUG', False) in ('true', '1')
 
-PAGES_DIR = set_path(getenv('PAGES_DIR', '/pages'))
-ASSETS_DIR = set_path(getenv('ASSETS_DIR', '/assets'))
+PAGES_DIR = set_path(
+    path=getenv('GALETTE_PAGES_DIR'),
+    fallback='pages'
+)
+
+ASSETS_DIR = set_path(
+    path=getenv('GALETTE_ASSETS_DIR'),
+    fallback='assets'
+)
 
 WEBP_DIR = set_path(
-    path=getenv('WEBP_DIR', '/webp'),
+    path=getenv('GALETTE_WEBP_DIR'),
     fallback='.webp',
     create_fallback=True
 )
 
 STATIC_DIR = set_path(
-    path=getenv('STATIC_DIR', '/static'),
+    path=getenv('GALETTE_STATIC_DIR'),
     fallback='static',
 )
     
 TEMPLATES_DIR = set_path(
-    path=getenv('TEMPLATES_DIR', '/templates'),
+    path=getenv('GALETTE_TEMPLATES_DIR'),
     fallback='templates'
 )
 
 BUILD_DIR = set_path(
-    path=getenv('BUILD_DIR', '/build'),
+    path=getenv('GALETTE_BUILD_DIR'),
     fallback='.build',
     create_fallback=True
 )
