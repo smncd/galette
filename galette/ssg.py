@@ -1,15 +1,23 @@
+from os import getenv
 from shutil import copytree
 from jinja2 import Template
 from starlette.requests import Request
 from starlette.routing import Router
-from galette.settings import BUILD_DIR, ASSETS_DIR, STATIC_DIR, WEBP_DIR, PAGES_DIR
+from galette.settings import ASSETS_DIR, STATIC_DIR, WEBP_DIR, PAGES_DIR
 from galette.templates import templates
 from galette.app import routes
 from galette.files import get_all_page_files, get_file_content
 from galette.pages import page_context
+from galette.utils import set_path
 
 
 if __name__ == '__main__':
+    BUILD_DIR = set_path(
+        path=getenv('GALETTE_BUILD_DIR'),
+        fallback='.build',
+        create_fallback=True
+    )
+
     if not BUILD_DIR:
         raise Exception("Build dir does not exist, exiting...")
 

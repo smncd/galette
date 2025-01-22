@@ -28,9 +28,3 @@ TEMPLATES_DIR = set_path(
     path=getenv('GALETTE_TEMPLATES_DIR'),
     fallback='templates'
 )
-
-BUILD_DIR = set_path(
-    path=getenv('GALETTE_BUILD_DIR'),
-    fallback='.build',
-    create_fallback=True
-)
