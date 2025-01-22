@@ -1,0 +1,26 @@
+services:
+  nginx:
+    image: nginx:latest
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./static:/usr/share/nginx/html/static:ro
+      - ./assets:/usr/share/nginx/html/assets:ro
+      - webp:/usr/share/nginx/html/.webp:ro
+    depends_on:
+      - galette
+  galette:
+    image: registry.gitlab.com/smncd/galette:latest
+    build: ../../..
+    ports:
+      - 5000:5000
+    volumes:
+      - ./pages/:/pages
+      - ./assets/:/assets
+      - webp:/app/.webp
+      - ./templates/:/templates
+      - ./static/:/static
+
+volumes:
+  webp:
