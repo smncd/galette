@@ -1,5 +1,3 @@
-from uuid import uuid5, NAMESPACE_URL
-from pathlib import Path
 from starlette.endpoints import HTTPEndpoint
 from starlette.exceptions import HTTPException
 from starlette.responses import HTMLResponse, RedirectResponse
@@ -9,6 +7,7 @@ from galette.files import get_file_content
 from galette.settings import PAGES_DIR, DEBUG
 from galette.templates import render, html_ext_list
 from galette.pages import page_context
+from galette.utils import uuid_for
 
 
 cache = PageCache(maxsize=512)
@@ -49,7 +48,7 @@ class Page(HTTPEndpoint):
         headers = {}
         body: str
         
-        page_id = str(uuid5(namespace=NAMESPACE_URL, name=str(page_path)))
+        page_id = uuid_for(page_path)
         page_file_mtime = page_path.stat().st_mtime
         
         page_cache = cache.get(id=page_id)

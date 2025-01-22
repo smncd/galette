@@ -1,4 +1,8 @@
 from pathlib import Path
+from uuid import uuid5, NAMESPACE_URL
+
+def uuid_for(string: str|Path) -> str: 
+    return str(uuid5(namespace=NAMESPACE_URL, name=str(string)))
 
 def set_path(path: Path|str|None, fallback: Path|str|None = None, create_fallback: bool = False) -> Path:
     if path:

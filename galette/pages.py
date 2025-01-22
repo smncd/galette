@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 from markupsafe import Markup
 from starlette.requests import Request
 from galette.settings import ASSETS_DIR, WEBP_DIR
+from galette.utils import uuid_for
 
 
 def page_context(request: Request|dict, page_data: dict[str, dict|str]) -> dict:
@@ -42,7 +43,7 @@ def page_context(request: Request|dict, page_data: dict[str, dict|str]) -> dict:
             asset_timestamp = asset_path.stat().st_mtime
 
             asset_name_hash = asset_name
-            asset_time_hash = str(uuid5(namespace=NAMESPACE_URL, name=str(asset_timestamp)))
+            asset_time_hash = uuid_for(asset_timestamp)
 
             webp_name = f'{asset_time_hash}.webp'
             
