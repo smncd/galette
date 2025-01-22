@@ -16,10 +16,4 @@ exception_handlers = {
     404: not_found
 }
 
-async def lifespan(app):
-    for dir in (PAGES_DIR, ASSETS_DIR, WEBP_DIR, STATIC_DIR, TEMPLATES_DIR):
-        if not dir:
-            raise Exception(f'Required directory {dir} does not exist, exiting...')
-    yield
-
-app = Starlette(routes=routes, exception_handlers=exception_handlers, lifespan=lifespan, debug=DEBUG)
+app = Starlette(routes=routes, exception_handlers=exception_handlers, debug=DEBUG)
