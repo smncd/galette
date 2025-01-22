@@ -1,4 +1,4 @@
-![Galette](./docs/banner.jpg)
+![Galette](./docs/assets/banner.jpg)
 =============================
 
 Galette is a Docker powered Markdown-to-HTML server, built with Starlette and Uvicorn.
@@ -123,7 +123,7 @@ You'd end up with the following rendered page:
 
 Static files have the base `/static`, so `/path/to/your/static/main.css` would end up being `http://localhost:5000/static/main.css`.
 
-A complete example is available [here](./example/)
+A complete example is available [here](./docs/example/)
 
 License and Ownership
 ---------------------
