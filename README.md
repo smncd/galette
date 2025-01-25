@@ -60,8 +60,22 @@ services:
 
 The static folder can be used however you want/need, but the templates folder needs at least two files for Galette to be happy:
 
-* `page.jinja2`: Your page template. For now, different templates aren't really supported.
+* `page.jinja2`: The default page template.
 * `404.jinja2`: The 404 page template.
+
+### Different templates
+
+You can have multiple page templates, and choose which one you want your page to use. Simply create a file in your templates folder, `post.html.jinja2` for example, and put your markup in there. To make a page use this template, add the following to the frontmatter:
+
+```yaml
+---
+# ...
+template: post 
+# ...
+---
+```
+
+If no template is specified, the default, `page`, will be used.
 
 ### Tip!
 
