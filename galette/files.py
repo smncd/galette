@@ -1,5 +1,6 @@
 import re
 import yaml
+from typing import TypedDict
 from pathlib import Path
 from galette.config import PAGES_DIR
 
@@ -24,10 +25,12 @@ def get_file_content(file: Path) -> FileContent:
 
     if frontmatter_result:
         try:
-            frontmatter = yaml.load(
+            fm = yaml.load(
                 stream=frontmatter_result.group(1),
                 Loader=yaml.FullLoader
             )
+            if isinstance(fm, dict):
+                frontmatter = fm
         except:
             pass
     
