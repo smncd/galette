@@ -1,6 +1,6 @@
 from starlette.routing import Route, Mount
 from starlette.staticfiles import StaticFiles
-from galette.settings import ASSETS_DIR, WEBP_DIR, STATIC_DIR
+from galette.config import ASSETS_DIR, WEBP_DIR, STATIC_DIR
 from galette.views import Page, not_found
 
 

@@ -1,5 +1,5 @@
 from starlette.applications import Starlette
-from galette.settings import DEBUG
+from galette.config import DEBUG
 from galette.routes import routes, exception_handlers
 
 

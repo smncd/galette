@@ -2,7 +2,7 @@ from typing import Any, Tuple
 from jinja2.exceptions import TemplateNotFound
 from starlette.templating import Jinja2Templates, _TemplateResponse
 from starlette.requests import Request
-from galette.settings import TEMPLATES_DIR
+from galette.config import TEMPLATES_DIR
 
 
 templates = Jinja2Templates(directory=TEMPLATES_DIR)

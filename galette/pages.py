@@ -5,7 +5,7 @@ from markupsafe import Markup
 from pathlib import Path
 from urllib.parse import urlparse, urljoin
 from starlette.requests import Request
-from galette.settings import ASSETS_DIR, WEBP_DIR
+from galette.config import ASSETS_DIR, WEBP_DIR
 from galette.utils import uuid_for
 
 
