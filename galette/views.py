@@ -4,9 +4,9 @@ from starlette.responses import HTMLResponse, RedirectResponse
 from starlette.requests import Request
 from galette.cache import PageCache
 from galette.files import get_file_content
+from galette.pages import page_context
 from galette.settings import PAGES_DIR, DEBUG
 from galette.templates import render, html_ext_list
-from galette.pages import page_context
 from galette.utils import uuid_for
 
 

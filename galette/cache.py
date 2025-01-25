@@ -6,6 +6,7 @@ class PageCacheItem(TypedDict):
     timestamp: float
     body: str
 
+
 class PageCache:
     _maxsize: int
     _store: dict[str, PageCacheItem] = {}

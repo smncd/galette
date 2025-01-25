@@ -1,9 +1,8 @@
-from uuid import uuid5, NAMESPACE_URL
-from img2webp import convert_image
-from pathlib import Path
-from markdown import markdown
 from bs4 import BeautifulSoup
+from img2webp import convert_image
+from markdown import markdown
 from markupsafe import Markup
+from pathlib import Path
 from starlette.requests import Request
 from galette.settings import ASSETS_DIR, WEBP_DIR
 from galette.utils import uuid_for

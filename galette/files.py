@@ -1,8 +1,8 @@
 import re
 import yaml
 from pathlib import Path
-
 from galette.settings import PAGES_DIR
+
 
 def get_all_page_files() -> list[Path]:
     return list(PAGES_DIR.rglob('*.md'))

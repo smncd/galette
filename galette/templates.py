@@ -1,8 +1,7 @@
 from typing import Any, Tuple
+from jinja2.exceptions import TemplateNotFound
 from starlette.templating import Jinja2Templates, _TemplateResponse
 from starlette.requests import Request
-from jinja2.exceptions import TemplateNotFound
-
 from galette.settings import TEMPLATES_DIR
 
 

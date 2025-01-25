@@ -1,13 +1,12 @@
 from os import getenv
 from shutil import copytree
-from jinja2 import Template
 from starlette.requests import Request
 from starlette.routing import Router
-from galette.settings import ASSETS_DIR, STATIC_DIR, WEBP_DIR, PAGES_DIR
-from galette.templates import templates, html_ext_list, render
-from galette.routes import routes
 from galette.files import get_all_page_files, get_file_content
 from galette.pages import page_context
+from galette.routes import routes
+from galette.settings import ASSETS_DIR, STATIC_DIR, WEBP_DIR, PAGES_DIR
+from galette.templates import html_ext_list, render
 from galette.utils import set_path
 
 
