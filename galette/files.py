@@ -8,7 +8,11 @@ def get_all_page_files() -> list[Path]:
     return list(PAGES_DIR.rglob('*.md'))
 
 
-def get_file_content(file: Path) -> dict[str, dict|str|None]:
+class FileContent(TypedDict):
+    frontmatter: str|None
+    content: str|None
+    
+def get_file_content(file: Path) -> FileContent:
     data = open(file, 'r').read()
 
     frontmatter_regex = re.compile(r'^\A(?:---|\+\+\+)(.*?)(?:---|\+\+\+)', re.S | re.M)
