@@ -4,7 +4,7 @@ from jinja2 import Template
 from starlette.requests import Request
 from starlette.routing import Router
 from galette.settings import ASSETS_DIR, STATIC_DIR, WEBP_DIR, PAGES_DIR
-from galette.templates import templates
+from galette.templates import templates, html_ext_list, render
 from galette.app import routes
 from galette.files import get_all_page_files, get_file_content
 from galette.pages import page_context
@@ -34,18 +34,14 @@ def export():
 
         context = page_context(request, page_data)
 
-        context['request'] = request
-
-        template: Template = templates.get_template('page.jinja2')
-
-        body = template.render(context)
+        _, body = render(request=request, name=html_ext_list(context['template']), context=context)
 
         out_path = BUILD_DIR / page_path.relative_to(PAGES_DIR).with_suffix('' if page_path.name != 'index.md' else '.html') / ('index.html' if page_path.name != 'index.md' else '')
 
         out_path.parent.mkdir(exist_ok=True, parents=True)
 
         with (out_path).open('w') as file:
-            file.write(body)
+            file.write(body.decode("utf-8"))
             file.close()
             print(file)
     

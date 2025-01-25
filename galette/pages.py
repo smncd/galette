@@ -81,4 +81,7 @@ def page_context(request: Request|dict, page_data: dict[str, dict|str]) -> dict:
         for key, value in frontmatter.items():
             context[key] = value
 
+    if 'template' not in context or not isinstance(context['template'], str):
+        context['template'] = 'page'
+
     return context

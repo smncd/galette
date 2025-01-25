@@ -65,7 +65,7 @@ class Page(HTTPEndpoint):
 
             _, body = render(
                 request=request, 
-                name=html_ext_list('page'),
+                name=html_ext_list(context['template']),
                 context=context,
             )
 
