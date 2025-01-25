@@ -16,7 +16,7 @@ def get_file_content(file: Path) -> dict[str, dict|str|None]:
     frontmatter_result = frontmatter_regex.search(data)
 
     frontmatter = []
-    content = re.sub(r'^\A---\n([\s\S]*?)\n---', '', data)
+    content = re.sub(r'^\A---(\n([\s\S]*?)\n?)---', '', data)
 
     if frontmatter_result:
         try:
