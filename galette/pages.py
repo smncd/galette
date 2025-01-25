@@ -3,6 +3,7 @@ from img2webp import convert_image
 from markdown import markdown
 from markupsafe import Markup
 from pathlib import Path
+from urllib.parse import urlparse, urljoin
 from starlette.requests import Request
 from galette.settings import ASSETS_DIR, WEBP_DIR
 from galette.utils import uuid_for
@@ -26,8 +27,16 @@ def page_context(request: Request|dict, page_data: dict[str, dict|str]) -> dict:
     soup = BeautifulSoup(html, "html.parser")
 
     for anchor in soup.find_all('a', href=True):
-        if anchor['href'].endswith('.md'):
-            anchor['href'] = anchor['href'][:-3]
+        href = urlparse(str(anchor['href']))
+
+        if not href.scheme and not href.netloc:
+
+            resolved_href = urljoin('/', href.path).lstrip('/')
+
+            if resolved_href.endswith('.md'):
+                resolved_href = resolved_href[:-3]
+
+            anchor['href'] = request.url_for('page', page=resolved_href)
 
     for img in soup.find_all('img', src=True):
         if img['src'].startswith('/assets'):
