@@ -21,11 +21,7 @@ def html_ext_list(id: str) -> list[str]:
     return [f"{id}.{extension}" for extension in extensions]
 
 
-def render(
-    request: Request,
-    name: str | list[str],
-    **kwargs: Any,
-) -> Tuple[_TemplateResponse, bytes | memoryview]:
+def render(request: Request, name: str | list[str], **kwargs: Any) -> Tuple[_TemplateResponse, bytes | memoryview]:
     template_res = lambda tname: templates.TemplateResponse(
         request=request, name=tname, **kwargs
     )
