@@ -1,3 +1,4 @@
+from typing import TypedDict
 from bs4 import BeautifulSoup
 from img2webp import convert_image
 from markdown import markdown
@@ -8,8 +9,12 @@ from starlette.requests import Request
 from galette.config import ASSETS_DIR, WEBP_DIR
 from galette.utils import uuid_for
 
+class PageContext(TypedDict):
+    html: str|None
+    template: str
 
-def page_context(request: Request|dict, page_data: dict[str, dict|str]) -> dict:
+
+def page_context(request: Request|dict, page_data: dict[str, dict|str]) -> PageContext:
     context = {}
 
     html = markdown(
@@ -50,15 +55,14 @@ def page_context(request: Request|dict, page_data: dict[str, dict|str]) -> dict:
             asset_name = asset_path.name
             asset_timestamp = asset_path.stat().st_mtime
 
-            asset_name_hash = asset_name
             asset_time_hash = uuid_for(asset_timestamp)
 
             webp_name = f'{asset_time_hash}.webp'
             
-            webp_path = WEBP_DIR / path.with_name(asset_name_hash) / webp_name
+            webp_path = WEBP_DIR / path.with_name(asset_name) / webp_name
             webp_path.parent.mkdir(parents=True, exist_ok=True)
 
-            webp_src = request.url_for('webp_assets', path=str(path.with_name(asset_name_hash) / webp_name))
+            webp_src = request.url_for('webp_assets', path=str(path.with_name(asset_name) / webp_name))
 
             if not webp_path.is_file():
                 for path in webp_path.parent.rglob('**/*'):
